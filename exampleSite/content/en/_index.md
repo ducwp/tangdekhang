@@ -1,6 +1,6 @@
 ---
 author: Mark Dumay
-title: Welcome to Hinode!
+title: Welcome to Tangdekhang!
 description: A clean documentation and blog theme for your Hugo site based on Bootstrap 5.
 thumbnail:
     url: /img/sunrise.jpg
