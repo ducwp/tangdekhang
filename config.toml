@@ -1,0 +1,5 @@
+baseURL = '/'
+languageCode = 'vi-vn'
+title = 'My New Hugo Site'
+[[links]]
+	hinode_docs = '#'

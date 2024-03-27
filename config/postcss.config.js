@@ -4,7 +4,7 @@ const cssnano = require('cssnano')({
 })
 const whitelister = require('purgecss-whitelister')
 const purgecss = require('@fullhuman/postcss-purgecss')({
-  content: ['./hugo_stats.json'],
+  content: ['./exampleSite/hugo_stats.json'],
   defaultExtractor: (content) => {
     const els = JSON.parse(content).htmlElements
     return [...(els.tags || []), ...(els.classes || []), ...(els.ids || [])]
