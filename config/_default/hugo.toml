@@ -2,7 +2,7 @@ resourcedir = '../resources/'
 title = "Hinode"
 copyright = "Copyright © 2024 Mark Dumay."
 paginate = 9
-enableGitInfo = true
+enableGitInfo = false
 
 # additional settings
 baseURL = "https://tangdekhang.mattaodo.com/"
