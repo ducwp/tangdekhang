@@ -1,6 +1,6 @@
 {
   "name": "@gethinode/hinode",
-  "version": "0.23.0-alpha8",
+  "version": "0.23.4",
   "description": "Hinode is a clean documentation and blog theme for Hugo, an open-source static site generator",
   "keywords": [
     "hugo",
@@ -87,8 +87,8 @@
     "replace-in-files-cli": "^2.2.0",
     "rimraf": "^5.0.5",
     "shx": "^0.3.4",
-    "stylelint": "^15.11.0",
-    "stylelint-config-standard-scss": "^11.1.0"
+    "stylelint": "^16.3.1",
+    "stylelint-config-standard-scss": "^13.0.0"
   },
   "optionalDependencies": {
     "@gethinode/netlify-plugin-dartsass": "^0.3.0",

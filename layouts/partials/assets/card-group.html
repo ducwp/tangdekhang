@@ -31,12 +31,15 @@
 {{- $align := .align -}}
 {{- $subtle := .subtle }}
 {{- $loading := .loading -}}
+{{- $button := .button -}}
+{{- $buttonLabel := .buttonLabel -}}
+{{- $hook := .hook | default "assets/card.html" }}
 
 <!-- Override arguments -->
 {{ $isPages := in (slice "page.Pages" "resource.Resources") (printf "%T" $pages) }}
 {{ $paginator := "" }}
 {{ if and $isPages $paginate }}
-    {{ $paginator = $page.Paginate $pages }}
+    {{ $paginator = $page.Paginate $pages .max }}
     {{ $pages = first $paginator.PageSize (after (mul (sub $paginator.PageNumber 1) $paginator.PageSize) $pages) }}
 {{ end }}
 
@@ -101,11 +104,13 @@
                 "subtle" $subtle
                 "style" $style
                 "align" $align
+                "button" $button
+                "buttonLabel" $buttonLabel
             ) -}}
             {{- $params = merge $params $element }}
 
             <div class="col">
-                {{- partial "assets/card.html" $params -}}
+                {{- partial $hook $params -}}
             </div>
             {{- if and (lt $index (sub $max 1)) $separator -}}
                 <div class="col d-block d-sm-none">
@@ -116,7 +121,7 @@
         {{if $cards }}{{- print $cards | safeHTML }}{{ end }}
     </div>
 
-    {{ if $paginate }}
+    {{ if $paginator }}
         {{- if gt $paginator.TotalPages 1 -}}
             <div class="pt-3">{{ partial "assets/pagination.html" (dict "page" $page "format" "terse") }}</div>
         {{- end -}} 

@@ -29,6 +29,8 @@
 {{- $thumbnail := .thumbnail -}}
 {{- $title := .title -}}
 {{- $subtle := .subtle -}}
+{{- $button := .button -}}
+{{- $buttonLabel := .buttonLabel -}}
 {{- $colorStyle := "" -}}
 {{ if $color }}
     {{ if $subtle }}
@@ -37,6 +39,7 @@
         {{- $colorStyle = printf "bg-%s text-bg-%s" $color $color -}}
     {{ end }}
 {{ end }}
+{{- $hook := .hook | default "assets/image.html" }}
 
 <!-- Override arguments -->
 {{- $page := "" }}
@@ -69,16 +72,21 @@
     {{- $href := .href -}}
     {{- $color := .color -}}
     {{- $description := .description -}}
+    {{- $button := .button -}}
     
     {{- if $href -}}
         <a href="{{ $href }}" class="{{ if $color }}link-bg-{{ $color }}{{ else }}card-body-link{{ end }} stretched-link">
                 <p class="card-title fs-5 fw-bold">{{ $title }}</p>
-            {{ with $description }}<p class="card-text {{ if $color }}link-bg-{{ $color }}{{ else }}card-body-link{{ end }}">{{ . }}</p>{{ end -}}
+            {{ with $description }}
+                <div class="card-text {{ if $color }}link-bg-{{ $color }}{{ else }}card-body-link{{ end }}">
+                {{ . | safeHTML }}
+                </div>
+            {{ end -}}
         </a>
     {{- else -}}
         <div>
             {{ with $title }}<p class="card-title fs-5 fw-bold">{{ . }}</p>{{ end -}}
-            {{ with $description }}<p class="card-text">{{ . }}</p>{{ end -}}
+            {{ with $description }}<div class="card-text">{{ . | safeHTML }}</div>{{ end -}}
         </div>
     {{- end -}}
 {{- end -}}
@@ -120,10 +128,10 @@
 {{- if hasPrefix $orientation "horizontal" -}}
     <!-- Render horizontal card -->
     <div class="card {{ $colorStyle }} {{ $class }}">
-        <div class="row g-0 row-cols-1 h-100">
+        <div class="row g-0 row-cols-1 h-100{{ if $button }} pb-5{{ end }}">
             <div class="{{ if eq $orientation "horizontal-sm" }}col-4 col-md-2{{ else }}col-4{{ end }}">
                 {{- if $thumbnail -}}
-                    {{- partial "assets/image.html" (dict "url" $thumbnail "ratio" (or $ratio "1x1") "wrapper" "h-100 card-img-wrap" "class" "rounded-start card-img-h100" "title" $title "loading" $loading) -}}
+                    {{- partial $hook (dict "url" $thumbnail "ratio" (or $ratio "1x1") "wrapper" "h-100 card-img-wrap" "class" "rounded-start card-img-h100" "title" $title "loading" $loading) -}}
                 {{- else if $icon -}}
                     <div class="card-icon p-{{ $padding }} h-100 fa-wrapper d-flex align-items-{{ $align}} justify-content-center {{ $iconStyle }}">
                         {{- partial "assets/icon.html" (dict "icon" (printf "%s %s" $icon $style)) -}}
@@ -131,12 +139,16 @@
                 {{- end -}}
             </div>
             <div class="{{ if eq $orientation "horizontal-sm" }}col-8 col-md-10{{ else }}col-8{{ end }}">
-                <div class="card-body d-flex p-{{ $padding }} flex-column h-100">
+                <div class="card-body d-flex p-{{ $padding }} flex-column h-100 flex-fill">
                     {{ if $page }}<div>{{ partial "card-caption.html" (dict "page" $page "keywords" $header "color" $color) }}</div>{{ end }}
-                    <div class="h-100">
-                        {{- partial "card-body.html" (dict "title" $title "href" $href "color" $color "description" $description) -}}
+                    <div class="flex-fill">
+                        {{- partial "card-body.html" (dict "title" $title "href" $href "color" $color "description" $description "button" $button) -}}
                     </div>
                     {{ if $page }}<div>{{ partial "card-caption.html" (dict "page" $page "keywords" $footer "color" $color) }}</div>{{ end }}
+                    {{ if $button }}
+                        {{ $label := (or $buttonLabel $title) | default (T "readMore") }}
+                        <div>{{ partial "assets/button.html" (dict "title" $label "icon" "fas chevron-right" "href" $href "outline" true "size" "sm" "class" "card-button mb-n4") }}</div>
+                    {{ end }}
                 </div>
             </div>
         </div>
@@ -145,7 +157,7 @@
     <!-- Render stacked / default card -->
     <div class="card {{ $colorStyle }} {{ $class }} text-{{ $align }}">
         {{- if $thumbnail -}}
-            {{- partial "assets/image.html" (dict "url" $thumbnail "ratio" (or $ratio "16x9") "wrapper" "card-img-wrap" "class" "card-img-top" "title" (or $alt $title) "loading" $loading) -}}
+            {{- partial $hook (dict "url" $thumbnail "ratio" (or $ratio "16x9") "wrapper" "card-img-wrap" "class" "card-img-top" "title" (or $alt $title) "loading" $loading) -}}
         {{- else if $icon -}}
             <div class="card-icon p-{{ $padding }} {{ $iconStyle }} text-{{ $align }}">
                 {{- partial "assets/icon.html" (dict "icon" (printf "%s %s" $icon $style)) -}}
@@ -156,6 +168,15 @@
             {{- partial "card-body.html" (dict "title" $title "href" $href "color" $color "description" $description) -}}
             {{ if $page }}{{- partial "card-caption.html" (dict "page" $page "keywords" $footer "color" $color) -}}{{ end }}
         </div>
+        {{ if $button }}
+            {{ $label := (or $buttonLabel $title) | default (T "readMore") }}
+            <div class="row p-{{ $padding }}" >
+                <div class="{{ if eq $orientation "horizontal-sm" }}col-4 col-md-2{{ else if eq $orientation "horizontal" }}col-4{{ end }}"></div>
+                <div class="col {{ if eq $orientation "horizontal-sm" }}px-2{{ else if eq $orientation "horizontal"}}px-1 {{ else }}px-2 pt-1{{ end }}">
+                    {{ partial "assets/button.html" (dict "title" $label "href" $href "outline" true "size" "sm" "class" "card-button") }}
+                </div>
+            </div>
+        {{ end }}
     </div>
 {{- end -}}
 

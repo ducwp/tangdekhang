@@ -1,6 +1,4 @@
-module github.com/gethinode/hinode-test
+module github.com/gethinode/hinode/exampleSite
 
 go 1.19
 
-require (
-)
