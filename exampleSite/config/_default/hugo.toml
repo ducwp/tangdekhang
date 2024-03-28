@@ -5,7 +5,7 @@ paginate = 9
 enableGitInfo = true
 
 # additional settings
-baseURL = "https://demo.gethinode.com/"
+baseURL = "https://tangdekhang.mattaodo.com/"
 canonifyURLs = false
 enableEmoji = true
 enableRobotsTXT = true
